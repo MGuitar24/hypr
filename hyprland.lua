@@ -207,7 +207,7 @@ hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "u" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "d" }))
 
 -- Switch workspaces / move windows with mainMod + [0-9]
-for i = 1, 10 do
+for i = 1, 5 do
     local key = i % 10  -- 10 → key 0
     hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = tostring(i) }))
     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = tostring(i) }))
@@ -217,17 +217,16 @@ end
 hl.bind("CTRL + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m region"))
 
 -- Special workspace (scratchpad / magic)
--- hl.dsp.focus with special: workspace name acts as a toggle
-hl.bind(mainMod .. " + S",         hl.dsp.focus({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Games special workspace
-hl.bind(mainMod .. " + G",         hl.dsp.focus({ workspace = "special:games" }))
+hl.bind(mainMod .. " + G",         hl.dsp.workspace.toggle_special("games"))
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.move({ workspace = "special:games" }))
 
 -- Scroll through workspaces with mainMod + scroll / side buttons
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e-1" }), { mouse = true })
-hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e+1" }), { mouse = true })
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse:276",  hl.dsp.focus({ workspace = "e-1" }), { mouse = true })
 hl.bind(mainMod .. " + mouse:275",  hl.dsp.focus({ workspace = "e+1" }), { mouse = true })
 
@@ -275,22 +274,13 @@ hl.window_rule({
     workspace = "2",
 })
 
--- Games → special:games (by class)
--- RE2 doesn't support (?i) inline flag, so spell out the pattern lowercase
--- Steam game windows use lowercase class names like steam_app_12345
+-- Games → special:games (gamescope)
 hl.window_rule({
-    name      = "games_route_by_class",
-    match     = { class = "^(steam_app_.*|[Ss]team_[Aa]pp_.*|[Gg]amescope|[Ss]unshine|[Pp]roton|[Ww]ine)$" },
+    name      = "games_route_gamescope",
+    match     = { class = "gamescope" },
     workspace = "special:games",
 })
 
-
--- Fullscreen for games workspace
-hl.window_rule({
-    name       = "games_fullscreen",
-    match      = { workspace = "special:games" },
-    fullscreen = true,
-})
 
 -- Firefox Picture-in-Picture → special:games, pinned float
 hl.window_rule({
