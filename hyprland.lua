@@ -1,0 +1,329 @@
+-- Hyprland Lua config — converted from hyprlang
+-- Place this file at: ~/.config/hypr/hyprland.lua
+-- Refer to the wiki: https://wiki.hypr.land/Configuring/Start/
+
+--------------------
+---- MONITORS ----
+--------------------
+
+-- See https://wiki.hypr.land/Configuring/Basics/Monitors/
+hl.monitor({
+    output   = "DP-3",
+    mode     = "3440x1440",
+    position = "0x0",
+    scale    = 1,
+})
+
+---------------------
+---- MY PROGRAMS ----
+---------------------
+
+local browser     = "firefox"
+local terminal    = "ghostty"
+local fileManager = "thunar"
+local menu        = "wofi --show drun"
+local fzf         = "fd --type f . ~ | wofi --dmenu | xargs xdg-open"
+
+-------------------
+---- AUTOSTART ----
+-------------------
+
+-- See https://wiki.hypr.land/Configuring/Basics/Autostart/
+hl.on("hyprland.start", function()
+    hl.exec_cmd("waybar & swaync & hyprpaper & hypridle")
+    hl.exec_cmd("nm-applet")
+    hl.exec_cmd("blueman-applet")
+    hl.exec_cmd("dunst")
+    hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
+end)
+
+-------------------------------
+---- ENVIRONMENT VARIABLES ----
+-------------------------------
+
+-- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
+hl.env("XCURSOR_SIZE",         "24")
+hl.env("HYPRCURSOR_SIZE",      "24")
+hl.env("QT_QPA_PLATFORMTHEME", "kde")
+hl.env("QT_STYLE_OVERRIDE",    "Breeze")
+
+-----------------------
+---- LOOK AND FEEL ----
+-----------------------
+
+-- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
+hl.config({
+    general = {
+        gaps_in     = 2,
+        gaps_out    = 5,
+        border_size = 1,
+
+        col = {
+            active_border   = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
+            inactive_border = "rgba(595959aa)",
+        },
+
+        resize_on_border = false,
+        allow_tearing    = false,
+        layout           = "dwindle",
+    },
+
+    decoration = {
+        rounding       = 10,
+        rounding_power = 2,
+
+        active_opacity   = 1.0,
+        inactive_opacity = 1.0,
+
+        shadow = {
+            enabled      = true,
+            range        = 4,
+            render_power = 3,
+            color        = "rgba(1a1a1aee)",
+        },
+
+        blur = {
+            enabled  = true,
+            size     = 3,
+            passes   = 1,
+            vibrancy = 0.1696,
+        },
+    },
+
+    animations = {
+        enabled = true,
+    },
+
+    -- NOTE: dwindle.pseudotile was removed in 0.55
+    dwindle = {
+        preserve_split = true,
+    },
+
+    master = {
+        new_status = "master",
+    },
+
+    misc = {
+        force_default_wallpaper = 0,
+        disable_hyprland_logo   = true,
+    },
+
+    cursor = {
+        hide_on_key_press = true,
+    },
+
+    input = {
+        kb_layout  = "us",
+        kb_variant = "",
+        kb_model   = "",
+        kb_options = "",
+        kb_rules   = "",
+
+        follow_mouse = 1,
+        sensitivity  = 0,
+
+        touchpad = {
+            natural_scroll = false,
+        },
+    },
+})
+
+--------------------
+---- ANIMATIONS ----
+--------------------
+
+-- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Animations/
+hl.curve("easeOutQuint",   { type = "bezier", points = { { 0.23, 1    }, { 0.32, 1 } } })
+hl.curve("easeInOutCubic", { type = "bezier", points = { { 0.65, 0.05 }, { 0.36, 1 } } })
+hl.curve("linear",         { type = "bezier", points = { { 0,    0    }, { 1,    1 } } })
+hl.curve("almostLinear",   { type = "bezier", points = { { 0.5,  0.5  }, { 0.75, 1 } } })
+hl.curve("quick",          { type = "bezier", points = { { 0.15, 0    }, { 0.1,  1 } } })
+
+hl.animation({ leaf = "global",        enabled = true, speed = 10,   bezier = "default" })
+hl.animation({ leaf = "border",        enabled = true, speed = 5.39, bezier = "easeOutQuint" })
+hl.animation({ leaf = "windows",       enabled = true, speed = 4.79, bezier = "easeOutQuint" })
+hl.animation({ leaf = "windowsIn",     enabled = true, speed = 4.1,  bezier = "easeOutQuint", style = "popin 87%" })
+hl.animation({ leaf = "windowsOut",    enabled = true, speed = 1.49, bezier = "linear",       style = "popin 87%" })
+hl.animation({ leaf = "fadeIn",        enabled = true, speed = 1.73, bezier = "almostLinear" })
+hl.animation({ leaf = "fadeOut",       enabled = true, speed = 1.46, bezier = "almostLinear" })
+hl.animation({ leaf = "fade",          enabled = true, speed = 3.03, bezier = "quick" })
+hl.animation({ leaf = "layers",        enabled = true, speed = 3.81, bezier = "easeOutQuint" })
+hl.animation({ leaf = "layersIn",      enabled = true, speed = 4,    bezier = "easeOutQuint", style = "fade" })
+hl.animation({ leaf = "layersOut",     enabled = true, speed = 1.5,  bezier = "linear",       style = "fade" })
+hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 1.79, bezier = "almostLinear" })
+hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
+hl.animation({ leaf = "workspaces",    enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
+hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
+hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
+
+---------------
+---- INPUT ----
+---------------
+
+-- 3-finger horizontal swipe → switch workspaces
+hl.gesture({
+    fingers   = 3,
+    direction = "horizontal",
+    action    = "workspace",
+})
+
+-- Per-device config
+-- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Devices/
+hl.device({
+    name        = "epic-mouse-v1",
+    sensitivity = -0.5,
+})
+
+---------------------
+---- KEYBINDINGS ----
+---------------------
+
+-- See https://wiki.hypr.land/Configuring/Basics/Binds/
+local mainMod = "SUPER"
+
+hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd(browser))
+hl.bind(mainMod .. " + T",          hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + W",          hl.dsp.window.close())
+hl.bind(mainMod .. " + M",          hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"))
+hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
+hl.bind(mainMod .. " + V",          hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + SPACE",      hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + F",          hl.dsp.exec_cmd(fzf))
+hl.bind(mainMod .. " + P",          hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + J",          hl.dsp.layout("togglesplit"))
+hl.bind(mainMod .. " + K",          hl.dsp.layout("swapsplit"))
+hl.bind(mainMod .. " + CTRL + L",   hl.dsp.exec_cmd("hyprlock"))
+
+-- Move focus with mainMod + arrow keys
+-- Direction values: l / r / u / d
+hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "l" }))
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "r" }))
+hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "u" }))
+hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "d" }))
+
+-- Switch workspaces / move windows with mainMod + [0-9]
+for i = 1, 10 do
+    local key = i % 10  -- 10 → key 0
+    hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = tostring(i) }))
+    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = tostring(i) }))
+end
+
+-- Screenshot (region)
+hl.bind("CTRL + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m region"))
+
+-- Special workspace (scratchpad / magic)
+-- hl.dsp.focus with special: workspace name acts as a toggle
+hl.bind(mainMod .. " + S",         hl.dsp.focus({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+
+-- Games special workspace
+hl.bind(mainMod .. " + G",         hl.dsp.focus({ workspace = "special:games" }))
+hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.move({ workspace = "special:games" }))
+
+-- Scroll through workspaces with mainMod + scroll / side buttons
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + mouse:276",  hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + mouse:275",  hl.dsp.focus({ workspace = "e-1" }))
+
+-- Picture-in-Picture corner snap (3440x1440 monitor)
+-- movewindowpixel has no native Lua dispatcher yet; use exec_raw
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_raw("movewindowpixel exact 50 125,title:^(Picture-in-Picture)$"))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_raw("movewindowpixel exact 2850 125,title:^(Picture-in-Picture)$"))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.exec_raw("movewindowpixel exact 2850 1050,title:^(Picture-in-Picture)$"))
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.exec_raw("movewindowpixel exact 50 1050,title:^(Picture-in-Picture)$"))
+
+-- Move/resize windows with mainMod + LMB/RMB and dragging
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+-- Volume & brightness (repeating, active on lock screen)
+hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
+hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
+hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"),                  { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),                  { locked = true, repeating = true })
+
+-- Media controls (requires playerctl)
+hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+
+--------------------------------
+---- WINDOWS AND WORKSPACES ----
+--------------------------------
+
+-- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
+-- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
+
+-- Steam → workspace 2
+hl.window_rule({
+    name      = "steam-workspace-2",
+    match     = { class = "steam" },
+    workspace = "2",
+})
+
+-- Games → special:games (by class)
+hl.window_rule({
+    name      = "games_route_by_class",
+    match     = { class = "^(?i)(steam_app_.*|gamescope|sunshine|proton|wine)$" },
+    workspace = "special:games",
+})
+
+-- Games → special:games (by initial_class)
+hl.window_rule({
+    name          = "games_route_by_initial_class",
+    match         = { initial_class = "^(?i)(steam_app_.*|gamescope|sunshine|proton|wine)$" },
+    workspace     = "special:games",
+})
+
+-- Fullscreen for games workspace
+hl.window_rule({
+    name       = "games_fullscreen",
+    match      = { workspace = "special:games" },
+    fullscreen = true,
+})
+
+-- Firefox Picture-in-Picture → special:games, pinned float
+hl.window_rule({
+    name      = "pip-firefox-gaming",
+    match     = { class = "^(firefox)$", title = "^(Picture-in-Picture)$" },
+    opacity   = "0.90",
+    float     = true,
+    pin       = true,
+    size      = "570 360",
+    move      = "50 125",
+    workspace = "special:games",
+})
+
+-- Suppress maximize events from all apps
+hl.window_rule({
+    name           = "suppress-maximize-events",
+    match          = { class = ".*" },
+    suppress_event = "maximize",
+})
+
+-- Fix XWayland drag issues
+hl.window_rule({
+    name     = "fix-xwayland-drags",
+    match    = {
+        class      = "^$",
+        title      = "^$",
+        xwayland   = true,
+        float      = true,
+        fullscreen = false,
+        pin        = false,
+    },
+    no_focus = true,
+})
+
+-- hyprland-run floating terminal at bottom-left
+hl.window_rule({
+    name  = "move-hyprland-run",
+    match = { class = "hyprland-run" },
+    move  = "20 monitor_h-120",
+    float = true,
+})
