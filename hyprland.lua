@@ -180,12 +180,16 @@ hl.device({
 ---------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Binds/
+
+-- scroll_event_delay = 0 prevents fast scrolling from being dropped
+hl.config({ binds = { scroll_event_delay = 0 } })
+
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + T",          hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + W",          hl.dsp.window.close())
-hl.bind(mainMod .. " + M",          hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"))
+hl.bind(mainMod .. " + M",          hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V",          hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + SPACE",      hl.dsp.exec_cmd(menu))
@@ -222,10 +226,10 @@ hl.bind(mainMod .. " + G",         hl.dsp.focus({ workspace = "special:games" })
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.move({ workspace = "special:games" }))
 
 -- Scroll through workspaces with mainMod + scroll / side buttons
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
-hl.bind(mainMod .. " + mouse:276",  hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse:275",  hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e-1" }), { mouse = true })
+hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e+1" }), { mouse = true })
+hl.bind(mainMod .. " + mouse:276",  hl.dsp.focus({ workspace = "e-1" }), { mouse = true })
+hl.bind(mainMod .. " + mouse:275",  hl.dsp.focus({ workspace = "e+1" }), { mouse = true })
 
 -- Picture-in-Picture corner snap (3440x1440 monitor)
 -- movewindowpixel has no native Lua dispatcher yet; use exec_raw
@@ -259,6 +263,11 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
+-- Persistent workspaces 1-10: exist even when empty, enabling scroll to work
+for i = 1, 5 do
+    hl.workspace_rule({ workspace = tostring(i), persistent = true, monitor = "DP-3" })
+end
+
 -- Steam → workspace 2
 hl.window_rule({
     name      = "steam-workspace-2",
@@ -267,18 +276,14 @@ hl.window_rule({
 })
 
 -- Games → special:games (by class)
+-- RE2 doesn't support (?i) inline flag, so spell out the pattern lowercase
+-- Steam game windows use lowercase class names like steam_app_12345
 hl.window_rule({
     name      = "games_route_by_class",
-    match     = { class = "^(?i)(steam_app_.*|gamescope|sunshine|proton|wine)$" },
+    match     = { class = "^(steam_app_.*|[Ss]team_[Aa]pp_.*|[Gg]amescope|[Ss]unshine|[Pp]roton|[Ww]ine)$" },
     workspace = "special:games",
 })
 
--- Games → special:games (by initial_class)
-hl.window_rule({
-    name          = "games_route_by_initial_class",
-    match         = { initial_class = "^(?i)(steam_app_.*|gamescope|sunshine|proton|wine)$" },
-    workspace     = "special:games",
-})
 
 -- Fullscreen for games workspace
 hl.window_rule({
