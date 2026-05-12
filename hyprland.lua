@@ -231,11 +231,21 @@ hl.bind(mainMod .. " + mouse:276",  hl.dsp.focus({ workspace = "e-1" }), { mouse
 hl.bind(mainMod .. " + mouse:275",  hl.dsp.focus({ workspace = "e+1" }), { mouse = true })
 
 -- Picture-in-Picture corner snap (3440x1440 monitor)
--- movewindowpixel has no native Lua dispatcher yet; use exec_raw
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_raw("movewindowpixel exact 50 125,title:^(Picture-in-Picture)$"))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_raw("movewindowpixel exact 2850 125,title:^(Picture-in-Picture)$"))
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.exec_raw("movewindowpixel exact 2850 1050,title:^(Picture-in-Picture)$"))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.exec_raw("movewindowpixel exact 50 1050,title:^(Picture-in-Picture)$"))
+-- PiP corner snap — find PiP by title and move it via window address
+local function snap_pip(x, y)
+    local windows = hl.get_windows()
+    for _, w in ipairs(windows) do
+        if w.title == "Picture-in-Picture" then
+            hl.dispatch(hl.dsp.window.move({ x = x, y = y, window = "address:" .. w.address }))
+            return
+        end
+    end
+end
+
+hl.bind(mainMod .. " + SHIFT + H", function() snap_pip(50,   125)  end)
+hl.bind(mainMod .. " + SHIFT + L", function() snap_pip(2850, 125)  end)
+hl.bind(mainMod .. " + SHIFT + K", function() snap_pip(2850, 1050) end)
+hl.bind(mainMod .. " + SHIFT + J", function() snap_pip(50,   1050) end)
 
 -- Move/resize windows with mainMod + LMB/RMB and dragging
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
