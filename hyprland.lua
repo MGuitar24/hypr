@@ -227,8 +227,8 @@ hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.move({ workspace = "special:gam
 -- Scroll through workspaces with mainMod + scroll / side buttons
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e-1" }))
 hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse:276",  hl.dsp.focus({ workspace = "e-1" }), { mouse = true })
-hl.bind(mainMod .. " + mouse:275",  hl.dsp.focus({ workspace = "e+1" }), { mouse = true })
+hl.bind(mainMod .. " + mouse:276",  hl.dsp.focus({ workspace = "e+1" }), { mouse = true })
+hl.bind(mainMod .. " + mouse:275",  hl.dsp.focus({ workspace = "e-1" }), { mouse = true })
 
 -- Picture-in-Picture corner snap (3440x1440 monitor)
 -- PiP corner snap — find PiP by title and move it via window address
