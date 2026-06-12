@@ -284,13 +284,35 @@ hl.window_rule({
     workspace = "2",
 })
 
--- Games → special:games (gamescope)
+-- Games → special:games (no gamescope required)
+-- Layer 1: anything that declares itself a game via the
+-- Wayland content-type protocol (gamescope, SDL3, newer native games)
 hl.window_rule({
-    name      = "games_route_gamescope",
-    match     = { class = "gamescope" },
-    workspace = "special:games",
+    name  = "tag-content-game",
+    match = { content = "game" },
+    tag   = "+game",
 })
 
+-- Layer 2: every Proton/Steam game — class is always steam_app_<appid>
+hl.window_rule({
+    name  = "tag-steam-app",
+    match = { class = "^(steam_app_\\d+)$" },
+    tag   = "+game",
+})
+
+-- Layer 3: gamescope still routes correctly if you use it for specific titles
+hl.window_rule({
+    name  = "tag-gamescope",
+    match = { class = "^(gamescope)$" },
+    tag   = "+game",
+})
+
+-- Route everything tagged game → special:games
+hl.window_rule({
+    name      = "games_route_tagged",
+    match     = { tag = "game" },
+    workspace = "special:games",
+})
 
 -- Firefox Picture-in-Picture → special:games, pinned float
 hl.window_rule({
