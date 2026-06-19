@@ -24,17 +24,6 @@ local fileManager = "thunar"
 local menu        = "wofi --show drun"
 local fzf         = "fd --type f . ~ | wofi --dmenu | xargs xdg-open"
 
--------------------
----- AUTOSTART ----
--------------------
-
--- See https://wiki.hypr.land/Configuring/Basics/Autostart/
-hl.on("hyprland.start", function()
-    hl.exec_cmd("waybar & swaync & hyprpaper & hypridle")
-    hl.exec_cmd("nm-applet")
-    hl.exec_cmd("blueman-applet")
-    hl.exec_cmd("/usr/lib/hyprpolkitagent/hyprpolkitagent")
-end)
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
@@ -189,6 +178,7 @@ hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + T",          hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + W",          hl.dsp.window.close())
 hl.bind(mainMod .. " + M",          hl.dsp.exit())
+hl.bind(mainMod .. " + N",          hl.dsp.exec_cmd("swaync-client -t"))
 hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V",          hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + SPACE",      hl.dsp.exec_cmd(menu))
